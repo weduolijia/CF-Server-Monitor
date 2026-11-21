@@ -92,6 +92,8 @@ jobs:
 
           echo "✅ wrangler.toml 已生成"
 
+      # 注意：Worker 名称固定为 cf-server-monitor，需与 Cloudflare 上的现有 Worker 一致，
+      # 否则会新建一个 Worker，自定义域名和 Agent 上报地址都对不上。
       # wrangler v4 的 `deploy` 会自动根据 wrangler.toml 中的 [[durable_objects.bindings]]
       # 声明创建 DO namespace（幂等：已存在则跳过），无需单独命令。
       # 前提：MetricsBroadcaster 类必须从 index.js 导出（已通过 src/index.js 实现）。
