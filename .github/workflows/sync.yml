@@ -2,6 +2,7 @@ name: Upstream Sync
 
 permissions:
   contents: write
+  actions: write
 
 on:
   schedule:
@@ -31,6 +32,13 @@ jobs:
 
           # Set test_mode true to run tests instead of the true action!!
           test_mode: false
+
+      # 用 GITHUB_TOKEN 推送不会触发 deploy.yml，同步到新提交后手动派发部署
+      - name: Trigger deploy
+        if: success() && steps.sync.outputs.has_new_commits == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: gh workflow run deploy.yml --repo ${{ github.repository }} --ref main
 
       - name: Sync check
         if: failure()
